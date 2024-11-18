@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gantt Licencias</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+    .En-Desarrollo {
+      background-color: #007bff;
+    }
+    .Programado {
+      background-color: #28a745;
+    }
+    .Completado {
+      background-color: #6f42c1;
+    }
+    .Bloqueado {
+      background-color: #dc3545;
+    }
+    .Pausado {
+      background-color: #6c757d;
+    }
+    .gantt {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 10px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .week-view .week {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .week-view h2 {
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+    .week-view .task {
+      margin: 10px auto;
+      padding: 10px;
+      background-color: #e9f5ff;
+      border-left: 4px solid #007bff;
+      border-radius: 5px;
+      max-width: 600px;
+    }
+    .diagram-view .week {
+      margin-bottom: 30px;
+    }
+    .diagram-view .task-bar {
+      position: relative;
+      height: 30px;
+      margin: 10px 0;
+      border-radius: 5px;
+      color: white;
+      text-align: center;
+      line-height: 30px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .diagram-view .task-bar:hover::after {
+      content: attr(data-state);
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .diagram-view h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    @media (max-width: 768px) {
+      .diagram-view {
+        grid-template-columns: 150px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Gantt Licencias</h1>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-color En-Desarrollo"></div>En Desarrollo</div>
+    <div class="legend-item"><div class="legend-color Programado"></div>Programado</div>
+    <div class="legend-item"><div class="legend-color Completado"></div>Completado</div>
+    <div class="legend-item"><div class="legend-color Bloqueado"></div>Bloqueado</div>
+    <div class="legend-item"><div class="legend-color Pausado"></div>Pausado</div>
+  </div>
+  <div class="filter">
+    <label for="week-filter">Filtrar por:</label>
+    <select id="week-filter">
+      <option value="all">Todas las fases</option>
+    </select>
+  </div>
+  <div class="gantt diagram-view" id="gantt-container"></div>
+
+  <script>
+    const states = ["En-Desarrollo", "Programado", "Completado", "Bloqueado", "Pausado"];
+
+    const tasks = JSON.parse(localStorage.getItem("ganttData")) || {
+      "Semana 1 / Análisis": [
+        { task: "Definir requisitos funcionales del sistema", duration: 7, state: "En-Desarrollo" },
+        { task: "Reuniones con stakeholders", duration: 5, state: "Programado" }
+      ],
+      "Semana 2 / Diseño": [
+        { task: "Crear diseño preliminar", duration: 7, state: "Completado" },
+        { task: "Diseñar interfaz de usuario", duration: 6, state: "Pausado" }
+      ]
+    };
+
+    const ganttContainer = document.getElementById("gantt-container");
+    const weekFilter = document.getElementById("week-filter");
+
+    // Agregar opciones al filtro
+    Object.keys(tasks).forEach(week => {
+      const option = document.createElement("option");
+      option.value = week;
+      option.textContent = week;
+      weekFilter.appendChild(option);
+    });
+
+    // Renderizar vista de diagrama o por semana
+    function renderGantt(filter = "all") {
+      ganttContainer.innerHTML = ""; // Limpiar contenedor
+
+      if (filter === "all") {
+        renderDiagramView();
+      } else {
+        renderWeekView(filter);
+      }
+    }
+
+    // Vista por semana
+    function renderWeekView(week) {
+      ganttContainer.className = "gantt week-view";
+      const weekTasks = tasks[week];
+
+      const weekDiv = document.createElement("div");
+      weekDiv.className = "week";
+
+      const weekHeader = document.createElement("h2");
+      weekHeader.textContent = week;
+
+      weekTasks.forEach(task => {
+        const taskDiv = document.createElement("div");
+        taskDiv.className = "task";
+        taskDiv.textContent = `${task.task} (${task.duration} días, ${task.state})`;
+        weekDiv.appendChild(taskDiv);
+      });
+
+      ganttContainer.appendChild(weekDiv);
+    }
+
+    // Vista de diagrama
+    function renderDiagramView() {
+      ganttContainer.className = "gantt diagram-view";
+
+      Object.keys(tasks).forEach(week => {
+        const weekDiv = document.createElement("div");
+        weekDiv.className = "week";
+
+        const weekHeader = document.createElement("h2");
+        weekHeader.textContent = week;
+        weekDiv.appendChild(weekHeader);
+
+        tasks[week].forEach(task => {
+          const bar = document.createElement("div");
+          bar.className = `task-bar ${task.state}`;
+          bar.style.width = `${task.duration * 20}px`;
+          bar.textContent = task.task;
+          bar.setAttribute("data-state", task.state);
+
+          bar.addEventListener("click", () => {
+            const currentIndex = states.indexOf(task.state);
+            task.state = states[(currentIndex + 1) % states.length];
+            saveToLocalStorage();
+            renderGantt("all");
+          });
+
+          weekDiv.appendChild(bar);
+        });
+
+        ganttContainer.appendChild(weekDiv);
+      });
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem("ganttData", JSON.stringify(tasks));
+    }
+
+    weekFilter.addEventListener("change", (e) => {
+      renderGantt(e.target.value);
+    });
+
+    renderGantt("all");
+  </script>
+</body>
+</html>
