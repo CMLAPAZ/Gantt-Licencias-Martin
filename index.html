@@ -130,13 +130,43 @@
     const tasks = JSON.parse(localStorage.getItem("ganttData")) || {
       "Semana 1 / Análisis": [
         { task: "Definir requisitos funcionales del sistema", duration: 7, state: "En-Desarrollo" },
-        { task: "Reuniones con stakeholders", duration: 5, state: "Programado" }
+        { task: "Reuniones con stakeholders", duration: 5, state: "Programado" },
+        { task: "Identificar flujo de trabajo para licencias", duration: 4, state: "Pausado" },
+        { task: "Documentación inicial de requisitos", duration: 6, state: "Completado" }
       ],
       "Semana 2 / Diseño": [
-        { task: "Crear diseño preliminar", duration: 7, state: "Completado" },
-        { task: "Diseñar interfaz de usuario", duration: 6, state: "Pausado" }
+        { task: "Crear diseño preliminar de la base de datos", duration: 7, state: "Programado" },
+        { task: "Definir arquitectura del sistema", duration: 5, state: "En-Desarrollo" },
+        { task: "Diseñar interfaz de usuario", duration: 6, state: "Completado" }
+      ],
+      "Semana 3 / Desarrollo Inicial": [
+        { task: "Implementar la base de datos", duration: 8, state: "En-Desarrollo" },
+        { task: "Desarrollar módulo de autenticación", duration: 6, state: "Bloqueado" },
+        { task: "Crear vistas de front-end", duration: 5, state: "Programado" }
+      ],
+      "Semana 4 / Desarrollo Inicial": [
+        { task: "Completar módulo de gestión de licencias", duration: 7, state: "En-Desarrollo" },
+        { task: "Implementar lógica de cálculo de saldos", duration: 5, state: "Pausado" },
+        { task: "Desarrollar módulo de reportes", duration: 6, state: "Completado" }
+      ],
+      "Semana 5 / Implementación de Feriados": [
+        { task: "Crear módulo para ingresar feriados", duration: 5, state: "Programado" },
+        { task: "Integrar lógica con días hábiles", duration: 6, state: "En-Desarrollo" }
+      ],
+      "Semana 6 / Pruebas y Ajustes": [
+        { task: "Realizar pruebas unitarias", duration: 7, state: "Bloqueado" },
+        { task: "Pruebas de integración entre módulos", duration: 5, state: "En-Desarrollo" }
+      ],
+      "Semana 7 / Documentación": [
+        { task: "Documentar el sistema", duration: 5, state: "Programado" },
+        { task: "Crear manual de usuario", duration: 6, state: "Completado" }
+      ],
+      "Semana 8 / Capacitación y Despliegue": [
+        { task: "Capacitar al personal en el uso del sistema", duration: 7, state: "En-Desarrollo" },
+        { task: "Despliegue final y revisión", duration: 5, state: "Completado" }
       ]
     };
+    ;
 
     const ganttContainer = document.getElementById("gantt-container");
     const weekFilter = document.getElementById("week-filter");
