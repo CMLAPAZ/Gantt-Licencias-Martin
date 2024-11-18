@@ -10,14 +10,26 @@
       margin: 20px;
     }
     h1 {
-      text-align: center;
-      color: #333;
+      position: sticky; /* Opción pegajosa dentro del contenedor */
+      top: 0; /* Se fija al borde superior */
+      background-color: #fff; /* Fondo blanco para evitar interferencias visuales */
+      z-index: 100; /* Se asegura de estar al frente */
+      padding: 10px 0; /* Espaciado alrededor del título */
+      margin: 0; /* Evita márgenes que puedan causar problemas visuales */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Opcional: sombra para destacar */
+      text-align: center; /* Centrado del texto */
     }
+    
     .legend {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
+      position: sticky; /* Mantiene la leyenda fija */
+      top: 50px; /* Se coloca justo debajo del título (ajusta si es necesario) */
+      background-color: #fff; /* Fondo blanco */
+      z-index: 99; /* Asegura que esté detrás del título pero visible */
+      padding: 10px 0; /* Espaciado interno */
+      display: flex; /* Mantiene el diseño de las leyendas */
+      justify-content: center; /* Centra las leyendas */
+      gap: 20px; /* Espaciado entre los elementos */
+      border-bottom: 1px solid #ddd; /* Opcional: línea para separar la leyenda del contenido */
     }
     .legend-item {
       display: flex;
@@ -100,6 +112,19 @@
       margin-bottom: 10px;
       color: #333;
     }
+    .diagram-view .week h2 {
+      position: sticky; /* Hace que el encabezado sea "pegajoso" */
+      top: 0; /* Fija el encabezado al borde superior del contenedor */
+      background-color: #fff; /* Asegura que tenga fondo sólido para ser legible */
+      z-index: 10; /* Trae el título al frente para que no quede detrás de otros elementos */
+      margin: 0;
+      padding: 10px 0;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 2px solid #ddd; /* Opcional: Añade una línea para destacar */
+    }
+    
     @media (max-width: 768px) {
       .diagram-view {
         grid-template-columns: 150px auto;
